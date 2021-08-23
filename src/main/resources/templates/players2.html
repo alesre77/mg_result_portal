@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Players</title>
+</head>
+<script>
+
+</script>
+<body>
+<div th:switch="${players}">
+    <h2 th:case="null">No players yet!</h2>
+    <div th:case="*">
+        <h2>Players</h2>
+        <form th:action="@{/players}" method="get">
+            <input id="plSearch" type="text" name="plKeyword"/>
+            <button type="submit">findByRegNr</button>
+        </form>
+        <table id="playersTable">
+            <thead>
+            <tr>
+                <th>Jméno</th>
+                <th>Příjmení</th>
+                <th>Registrační číslo</th>
+                <th>Datum narození</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="player : ${players}">
+                <td th:text="${player.firstName}"></td>
+                <td th:text="${player.lastName}"></td>
+                <td th:text="${player.regNr}"></td>
+                <td th:text="${player.getFormattedBirthDate}"></td>
+                <td><a th:href="@{/edit/{id}(id=${player.id})}">Edit</a></td>
+                <td><a th:href="@{/delete/{id}(id=${player.id})}">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p><a href="/signup">Add a new user</a></p>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var players = /*[[${players}]]*/;
+    /*]]>*/
+
+    $('#plSearch').on('keyup', function () {
+        var value = $(this).val();
+        //console.log('value = ' + value);
+
+        var data = filterPlayer(value, players);
+        rebuildPlayersTable(data);
+    })
+
+    function filterPlayer(value, data) {
+        var filteredData = [];
+        value = value.toLowerCase();
+        alert('value: ' + value + ', data: ' + data.length);
+        for (var i = 0; i < data.length; i++) {
+            var regnr = data[i].regNr;
+            var firstname = data[i].firstName.toLowerCase();
+            var lastname = data[i].lastName.toLowerCase();
+            if (/*regnr.includes(value) ||*/ firstname.includes(value) || lastname.includes(value)) {
+                filteredData.push(data[i]);
+            }
+        }
+        return filteredData;
+    }
+
+    function rebuildPlayersTable(data) {
+        var table = document.getElementById('playersTable');
+        alert('table: ' + table);
+        table.innerHTML = '';
+        for (var i = 0; i < data.length; i++) {
+            var row = '<tr>' +
+                '                <td th:text="${data[i].firstName}"></td>' +
+                '                <td th:text="${data[i].lastName}"></td>' +
+                '                <td th:text="${data[i].regNr}"></td>' +
+                '                <td th:text="${data[i].getFormattedBirthDate}"></td>' +
+                '</tr>';
+            alert('row: ' + row);
+            table.innerHTML += row;
+        }
+    }
+</script>
+
+</body>
+</html>

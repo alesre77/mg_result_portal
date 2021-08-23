@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Players</title>
+    <link th:href="@{webjars/bootstrap/5.1.0/css/bootstrap.min.css} " th:rel="stylesheet" type="text/css"/>
+    <link th:href="@{static/css/datatables.css}" th:rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+
+        <h2>Players</h2>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 mt-5 mb-5">
+        <!--
+        <form th:action="@{/players}" method="get">
+            <input id="plSearch" type="text" name="plKeyword"/>
+            <button type="submit">findByRegNr</button>
+        </form>
+        -->
+        <table id="playersTable" class="table table-bordered table-responsive" style="width: 100%">
+            <thead>
+            <tr>
+                <th>Příjmení</th>
+                <th>Jméno</th>
+                <th>Registrační číslo</th>
+                <th>Datum narození</th>
+            </tr>
+            </thead>
+
+            <!--
+            <tbody>
+            <tr th:each="player : ${players}">
+                <td th:text="${player.firstName}"></td>
+                <td th:text="${player.lastName}"></td>
+                <td th:text="${player.regNr}"></td>
+                <td th:text="${player.getFormattedBirthDate}"></td>
+            </tr>
+            </tbody>
+            -->
+
+        </table>
+    </div>
+            </div>
+        </div>
+    <p><a href="/signup">Add a new user</a></p>
+</div>
+<!--
+<script src="../static/js/jquery-3.6.0.js"></script>
+
+<script src="../static/bootstrap/bootstrap.min.js"></script>
+-->
+<script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+<script src="/webjars/bootstrap/5.1.0/js/bootstrap.min.js"></script>
+<script src="../static/js/datatables.js"></script>
+
+<script>
+    $('#playersTable').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+            "url": "/playersFilterPageRest",
+            "type": "GET",
+            "dataType": "json",
+            "contentType": "application/json",
+            "data": "dataSet"
+            /*
+            "dataSrc":"",
+            "mData": function (d) {
+                alert('ajax: ' + d);
+                return JSON.stringify(d);
+            }
+            */
+        },
+        "columns": [
+            {"mData": "lastName","width": "30%"},
+            {"mData": "firstName", "width": "30%"},
+            {"mData": "regNr", "width": "20%"},
+            {"mData": "birthDate", "width": "20%"}
+        ]
+    });
+/*
+    $('#playersTable').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+            "url": "/employees/array",
+            "type": "POST",
+            "dataType": "json",
+            "contentType": "application/json",
+            "data": function (d) {
+                return JSON.stringify(d);
+            }
+        }
+    });
+    */
+</script>
+
+</body>
+</html>
